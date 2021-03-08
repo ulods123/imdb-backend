@@ -1,0 +1,754 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "",
+    "version": "1.0.0",
+    "title": "IMDB Task"
+  },
+  "host": "fynd-imdb-task-urvish.herokuapp.com",
+  "basePath": "/api",
+  "tags": [
+    {
+      "name": "auth",
+      "description": "Auth APIs"
+    },
+    {
+      "name": "user",
+      "description": "User APIs"
+    },
+    {
+      "name": "admin",
+      "description": "Admin APIs"
+    }
+  ],
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/getToken": {
+      "post": {
+        "tags": [
+          "auth"
+        ],
+        "summary": "returns token to access all other APIs",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "emailid": {
+                  "type": "string"
+                },
+                "password": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success Request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "responseStatus": {
+                  "type": "string",
+                  "description": "Request Status",
+                  "example": "SUCCESS"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/BadRequestResponse"
+            }
+          },
+          "403": {
+            "description": "Invalid Credentials",
+            "schema": {
+              "$ref": "#/definitions/UnauthenticatedResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
+          },
+          "502": {
+            "description": "Database Error",
+            "schema": {
+              "$ref": "#/definitions/DatabaseErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/user/v1/": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Fetches all movie for page",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "type": "integer",
+            "description": "Page for which data is required",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "Authorization",
+            "type": "string",
+            "description": "Authorization token to authorize request",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success Request",
+            "schema": {
+              "$ref": "#/definitions/GetApiResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/BadRequestResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "schema": {
+              "$ref": "#/definitions/UnauthenticatedResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
+          },
+          "502": {
+            "description": "Database Error",
+            "schema": {
+              "$ref": "#/definitions/DatabaseErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/user/v1/search": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Fetches all movie based on search term",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "type": "integer",
+            "description": "Page for which data is required",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "search_term",
+            "type": "integer",
+            "description": "Search term entered by user",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "Authorization",
+            "type": "string",
+            "description": "Authorization token to authorize request",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success Request",
+            "schema": {
+              "$ref": "#/definitions/GetApiResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/BadRequestResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "schema": {
+              "$ref": "#/definitions/UnauthenticatedResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
+          },
+          "502": {
+            "description": "Database Error",
+            "schema": {
+              "$ref": "#/definitions/DatabaseErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/user/v1/{filter_type}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Fetches Movies based on Filter type",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "page",
+            "type": "integer",
+            "description": "Page for which data is required",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "filter_type",
+            "type": "string",
+            "enum": [
+              "genre",
+              "director"
+            ],
+            "description": "Search term entered by user",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "Authorization",
+            "type": "string",
+            "description": "Authorization token to authorize request",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success Request",
+            "schema": {
+              "$ref": "#/definitions/GetApiResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/BadRequestResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "schema": {
+              "$ref": "#/definitions/UnauthenticatedResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
+          },
+          "502": {
+            "description": "Database Error",
+            "schema": {
+              "$ref": "#/definitions/DatabaseErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/user/v1/getGenre/{movie_id}": {
+      "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Returns genre of given movie",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "movie_id",
+            "type": "integer",
+            "required": true
+          },
+          {
+            "in": "header",
+            "name": "Authorization",
+            "type": "string",
+            "description": "Authorization token to authorize request",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success Request",
+            "schema": {
+              "$ref": "#/definitions/GetApiResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/BadRequestResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "schema": {
+              "$ref": "#/definitions/UnauthenticatedResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
+          },
+          "502": {
+            "description": "Database Error",
+            "schema": {
+              "$ref": "#/definitions/DatabaseErrorResponse"
+            }
+          }
+        }
+      }
+    },
+    "/admin/v1/": {
+      "post": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "Adds Movie",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "type": "string",
+            "description": "Authorization token to authorize request",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "director": {
+                  "type": "string"
+                },
+                "imdb_score": {
+                  "type": "number"
+                },
+                "popularity": {
+                  "type": "number"
+                },
+                "genre": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success Request",
+            "schema": {
+              "$ref": "#/definitions/SuccessAPIResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/BadRequestResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "schema": {
+              "$ref": "#/definitions/UnauthenticatedResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
+          },
+          "502": {
+            "description": "Database Error",
+            "schema": {
+              "$ref": "#/definitions/DatabaseErrorResponse"
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "updates Movie",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "type": "string",
+            "description": "Authorization token to authorize request",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "director": {
+                  "type": "string"
+                },
+                "imdb_score": {
+                  "type": "number"
+                },
+                "popularity": {
+                  "type": "number"
+                },
+                "genre": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success Request",
+            "schema": {
+              "$ref": "#/definitions/SuccessAPIResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/BadRequestResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "schema": {
+              "$ref": "#/definitions/UnauthenticatedResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
+          },
+          "502": {
+            "description": "Database Error",
+            "schema": {
+              "$ref": "#/definitions/DatabaseErrorResponse"
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "admin"
+        ],
+        "summary": "removes Movie",
+        "description": "",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Authorization",
+            "type": "string",
+            "description": "Authorization token to authorize request",
+            "required": true
+          },
+          {
+            "in": "body",
+            "name": "request",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                }
+              }
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success Request",
+            "schema": {
+              "$ref": "#/definitions/SuccessAPIResponse"
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "schema": {
+              "$ref": "#/definitions/BadRequestResponse"
+            }
+          },
+          "401": {
+            "description": "Invalid Token",
+            "schema": {
+              "$ref": "#/definitions/UnauthenticatedResponse"
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "schema": {
+              "$ref": "#/definitions/InternalServerErrorResponse"
+            }
+          },
+          "502": {
+            "description": "Database Error",
+            "schema": {
+              "$ref": "#/definitions/DatabaseErrorResponse"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "GetApiResponse": {
+      "type": "object",
+      "properties": {
+        "responseStatus": {
+          "type": "string",
+          "description": "Request Status.",
+          "example": "SUCCESS"
+        },
+        "data": {
+          "type": "object",
+          "properties": {
+            "total_count": {
+              "type": "integer"
+            },
+            "display_data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "movie_name": {
+                    "type": "string"
+                  },
+                  "director": {
+                    "type": "string"
+                  },
+                  "imdb_score": {
+                    "type": "number"
+                  },
+                  "popularity": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "BadRequestResponse": {
+      "type": "object",
+      "properties": {
+        "responseStatus": {
+          "type": "string",
+          "description": "Request Status",
+          "example": "ERROR"
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "errorCode": {
+              "type": "string",
+              "example": "BAD_REQUEST"
+            },
+            "errorMessage": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "InternalServerErrorResponse": {
+      "type": "object",
+      "properties": {
+        "responseStatus": {
+          "type": "string",
+          "description": "Request Status",
+          "example": "ERROR"
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "errorCode": {
+              "type": "string",
+              "example": "INTERNAL_SERVER_ERROR"
+            },
+            "errorMessage": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "UnauthenticatedResponse": {
+      "type": "object",
+      "properties": {
+        "responseStatus": {
+          "type": "string",
+          "description": "Request Status",
+          "example": "ERROR"
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "errorCode": {
+              "type": "string",
+              "example": "UNAUTHORIZED"
+            },
+            "errorMessage": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "SuccessAPIResponse": {
+      "type": "object",
+      "properties": {
+        "responseStatus": {
+          "type": "string",
+          "description": "Request Status",
+          "example": "SUCCESS"
+        },
+        "data": {
+          "type": "object"
+        }
+      }
+    },
+    "DatabaseErrorResponse": {
+      "type": "object",
+      "properties": {
+        "responseStatus": {
+          "type": "string",
+          "description": "Request Status",
+          "example": "ERROR"
+        },
+        "error": {
+          "type": "object",
+          "properties": {
+            "errorCode": {
+              "type": "string",
+              "example": "DATABASE_ERROR"
+            },
+            "errorMessage": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    }
+  }
+}

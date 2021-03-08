@@ -1,5 +1,8 @@
+import os
+
 from flask import Flask,request
 from flask_cors import CORS
+from flask_swagger_ui import get_swaggerui_blueprint
 
 from admin.v1.application import admin_blueprint
 from user.v1.application import users_v1_blueprint
@@ -9,12 +12,22 @@ from custom_exceptions import DatabaseException,BadRequestException, \
     AuthError
 from auth.auth import create_token,login_required,check_scope
 
-app=Flask(__name__)
+app=Flask(__name__,static_folder='docs')
 CORS(app)
+
+STATIC_PATH = os.path.join(os.getcwd(),'docs')
+print(STATIC_PATH)
 
 app.register_blueprint(admin_blueprint,url_prefix='/api/admin/v1')
 
 app.register_blueprint(users_v1_blueprint,url_prefix='/api/user/v1')
+
+swaggerui_blueprint = get_swaggerui_blueprint(
+    "/api/docs",  # Swagger UI static files will be mapped to '{SWAGGER_URL}/dist/'
+    "/docs/swagger.json"
+)
+
+app.register_blueprint(swaggerui_blueprint)
 
 @app.errorhandler(DatabaseException)
 def handle_auth_error(ex):
