@@ -37,14 +37,14 @@ def handle_auth_error(ex):
 def health():
     return "Yo I am running!!!"
 
-@app.route('/testToken',methods=['POST'])
+@app.route('/api/testToken',methods=['POST'])
 @login_required
 @check_scope(scope_required="create")
 def test():
     return "Yo I am running!!!"
 
 
-@app.route('/getToken',methods=['POST'])
+@app.route('/api/getToken',methods=['POST'])
 def get_token():
     request_body=request.json
     validate_request_body('login',request_body)
