@@ -15,8 +15,6 @@ from auth.auth import create_token,login_required,check_scope
 app=Flask(__name__,static_folder='docs')
 CORS(app)
 
-STATIC_PATH = os.path.join(os.getcwd(),'docs')
-print(STATIC_PATH)
 
 app.register_blueprint(admin_blueprint,url_prefix='/api/admin/v1')
 
