@@ -28,9 +28,9 @@ def handle_auth_error(ex):
 def handle_auth_error(ex):
     return create_error_response(error_code="BAD_REQUEST",error_message=ex.error,status_code=400)
 
-# @app.errorhandler(Exception)
-# def handle_auth_error(ex):
-#     return create_error_response()
+@app.errorhandler(Exception)
+def handle_auth_error(ex):
+    return create_error_response()
 
 
 
