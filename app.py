@@ -33,7 +33,6 @@ def handle_auth_error(ex):
     return create_error_response()
 
 
-
 @app.route('/health',methods=['GET'])
 def health():
     return "Yo I am running!!!"
