@@ -1,0 +1,14 @@
+{
+    "filter":
+    {
+        "type":"string",
+        "required":true,
+        "empty":false
+    },
+    "page":
+    {
+        "type":"string",
+        "required":true,
+        "empty":false
+    }
+}

@@ -1,0 +1,8 @@
+{
+    "page":
+    {
+        "type":"string",
+        "required":true,
+        "empty":false
+    }
+}
