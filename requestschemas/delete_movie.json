@@ -1,0 +1,7 @@
+{
+    "id":{
+        "type":"integer",
+        "required":true,
+        "empty":false
+    }
+}

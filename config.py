@@ -5,3 +5,6 @@ class Config:
         SERVER_NAME='sql6.freemysqlhosting.net'
         PORT=3306
         DATABASE_NAME='sql6397037'
+    class JWT:
+        SECRET_KEY='4Mk08YGLxdaL'
+        ALGORITHM='HS512'

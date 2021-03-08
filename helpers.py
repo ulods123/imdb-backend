@@ -1,6 +1,7 @@
 #python default imports
 import json
 from datetime import datetime
+import hashlib
 
 #pip install imports
 from flask import jsonify
@@ -10,7 +11,7 @@ from cerberus import Validator
 
 # application imports
 from config import Config
-from custom_exceptions import DatabaseException
+from custom_exceptions import DatabaseException,BadRequestException
 
 def create_success_response(data={}):
         row=jsonify(responseStatus="SUCCESS",data=data)
@@ -53,12 +54,13 @@ def execute_query(query,cursor_class=pymysql.cursors.DictCursor):
 def validate_request_body(schema_file_name,request_body):
     v = Validator(read_schema_file(schema_file_name))
     valid = v.validate(request_body)
-    print('_+_+_+_+', v.errors)
-    return valid, v.errors
+    if not valid:
+        raise BadRequestException(v.errors)
 
 def read_schema_file(schema_file_name):
     with open(f'requestschemas/{schema_file_name}.json') as f:
         return json.loads(f.read())  
 
-def validate_dependent_on(field, value, error):
-    print(field,error,value)
+def get_hashed_password(password):
+    return hashlib.md5(password.encode('utf-8')).hexdigest()
+

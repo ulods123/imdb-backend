@@ -1,0 +1,35 @@
+{
+    "name":
+    {
+        "type":"string",
+        "required":true,
+        "empty":false,
+        "regex":"[A-Za-z0-9. ]{2,}"
+    },
+    "director":{
+        "type":"string",
+        "required":true,
+        "empty":false,
+        "regex": "[A-Za-z0-9.]{2,}"
+    },
+    "imdb_score":{
+        "type":"float",
+        "required":true,
+        "empty":false,
+        "min":0,
+        "max":10
+    },
+    "popularity":{
+        "type":"float",
+        "required":true,
+        "empty":false,
+        "min":0,
+        "max":100
+    },
+    "genre":{
+        "type":"list",
+        "required":true,
+        "empty":false
+    }
+
+}
